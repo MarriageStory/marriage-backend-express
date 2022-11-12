@@ -5,7 +5,7 @@ const doc = {
     version: "1.0.0",
     title: "Marriage Story API",
   },
-  host: "20.46.127.30:8000",
+  host: "20.46.127.30:5000",
   basePath: "/api",
   schemes: ["http"],
 };
