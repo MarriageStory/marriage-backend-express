@@ -91,16 +91,19 @@ router.get(
 router.post(
   "/events/:eventId/schedules/create",
   authMiddleware,
+  adminMiddleware,
   scheduleController.store
 );
 router.put(
   "/events/:eventId/schedules/update/:scheduleId",
   authMiddleware,
+  adminMiddleware,
   scheduleController.update
 );
 router.delete(
   "/events/:eventId/schedules/delete/:scheduleId",
   authMiddleware,
+  adminMiddleware,
   scheduleController.destroy
 );
 

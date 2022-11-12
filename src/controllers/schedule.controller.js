@@ -7,17 +7,38 @@ module.exports = {
       const { eventId } = req.params;
       const userId = req.user.id;
 
-      const checkEvent = await prisma.users_events.findFirst({
+      const checkRole = await prisma.users.findFirst({
         where: {
-          AND: {
-            event_id: Number(eventId),
-            user_id: Number(userId),
-          },
+          id: Number(userId),
+        },
+        include: {
+          role: {},
         },
       });
 
-      if (!checkEvent) {
-        throw { status: 404, message: "EVENT_NOT_FOUND" };
+      if (checkRole.role.role_name === "Client") {
+        const checkEvent = await prisma.users_events.findFirst({
+          where: {
+            AND: {
+              event_id: Number(eventId),
+              user_id: Number(userId),
+            },
+          },
+        });
+
+        if (!checkEvent) {
+          throw { status: 404, message: "EVENT_NOT_FOUND" };
+        }
+      } else {
+        const checkEvent = await prisma.events.findFirst({
+          where: {
+            id: Number(eventId),
+          },
+        });
+
+        if (!checkEvent) {
+          throw { status: 404, message: "EVENT_NOT_FOUND" };
+        }
       }
 
       const schedules = await prisma.schedules.findMany({
@@ -45,17 +66,38 @@ module.exports = {
       const { eventId, scheduleId } = req.params;
       const userId = req.user.id;
 
-      const checkEvent = await prisma.users_events.findFirst({
+      const checkRole = await prisma.users.findFirst({
         where: {
-          AND: {
-            event_id: Number(eventId),
-            user_id: Number(userId),
-          },
+          id: Number(userId),
+        },
+        include: {
+          role: {},
         },
       });
 
-      if (!checkEvent) {
-        throw { status: 404, message: "EVENT_NOT_FOUND" };
+      if (checkRole.role.role_name === "Client") {
+        const checkEvent = await prisma.users_events.findFirst({
+          where: {
+            AND: {
+              event_id: Number(eventId),
+              user_id: Number(userId),
+            },
+          },
+        });
+
+        if (!checkEvent) {
+          throw { status: 404, message: "EVENT_NOT_FOUND" };
+        }
+      } else {
+        const checkEvent = await prisma.events.findFirst({
+          where: {
+            id: Number(eventId),
+          },
+        });
+
+        if (!checkEvent) {
+          throw { status: 404, message: "EVENT_NOT_FOUND" };
+        }
       }
 
       const checkSchedule = await prisma.schedules.findFirst({
@@ -85,16 +127,12 @@ module.exports = {
   store: async (req, res) => {
     try {
       const { eventId } = req.params;
-      const userId = req.user.id;
 
       const { nama_kegiatan, detail_kegiatan, datetime, tempat } = req.body;
 
-      const checkEvent = await prisma.users_events.findFirst({
+      const checkEvent = await prisma.events.findFirst({
         where: {
-          AND: {
-            event_id: Number(eventId),
-            user_id: Number(userId),
-          },
+          id: Number(eventId),
         },
       });
 
@@ -176,14 +214,10 @@ module.exports = {
   destroy: async (req, res) => {
     try {
       const { eventId, scheduleId } = req.params;
-      const userId = req.user.id;
 
-      const checkEvent = await prisma.users_events.findFirst({
+      const checkEvent = await prisma.events.findFirst({
         where: {
-          AND: {
-            event_id: Number(eventId),
-            user_id: Number(userId),
-          },
+          id: Number(eventId),
         },
       });
 
