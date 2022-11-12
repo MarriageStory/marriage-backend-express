@@ -50,7 +50,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          docker rm -f pawang-backend
+          docker rm -f marriage-story
           docker image rm -f ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
           docker run -d -p 5000:5000 --restart always -v /home/marriagestory/marriage-story/public:/usr/src/app/public --name marriage-story ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
