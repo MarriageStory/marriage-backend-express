@@ -5,16 +5,9 @@ const doc = {
     version: "1.0.0",
     title: "Marriage Story API",
   },
-  host: "localhost:8000",
+  host: "20.89.56.97:8000",
   basePath: "/api",
-  schemes: ["http", "https"],
-  securityDefinitions: {
-    apiKeyAuth: {
-      type: "apiKey",
-      in: "header",
-      name: "Authorization",
-    },
-  },
+  schemes: ["http"],
 };
 
 const outputFile = "./swagger-output.json";
