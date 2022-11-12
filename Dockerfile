@@ -11,8 +11,6 @@ COPY . .
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 
-RUN npx prisma db seed
-
 RUN npm run swagger-autogen
 
 EXPOSE 5000
