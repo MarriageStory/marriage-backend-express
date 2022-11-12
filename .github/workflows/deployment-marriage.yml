@@ -19,16 +19,10 @@ jobs:
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v1.3
       with:
-        envkey_PORT: 5000
+        envkey_APP_PORT: 5000
         envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        envkey_TOKEN_SECRET_KEY: ${{ secrets.TOKEN_SECRET_KEY }}
-        envkey_CONFIG_SMTP_HOST: smtp.gmail.com
-        envkey_CONFIG_SENDER_NAME: Pawang <${{ secrets.CONFIG_AUTH_EMAIL }}>
-        envkey_CONFIG_AUTH_EMAIL: ${{ secrets.CONFIG_AUTH_EMAIL }}
-        envkey_CONFIG_AUTH_PASSWORD: ${{ secrets.CONFIG_AUTH_PASSWORD }}
-        envkey_ONESIGNAL_USER_KEY: ${{ secrets.ONESIGNAL_USER_KEY }}
-        envkey_ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
-        envkey_ONESIGNAL_REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
+        envkey_JWT_ACCESS_TOKEN_SECRET: ${{ secrets.JWT_ACCESS_TOKEN_SECRET }}
+        envkey_JWT_ACCESS_TOKEN_EXPIRED: Pawang <${{ secrets.JWT_ACCESS_TOKEN_EXPIRED }}>
       
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
@@ -59,4 +53,4 @@ jobs:
           docker rm -f pawang-backend
           docker image rm -f ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
-          docker run -d -p 5000:5000 --restart always -v /home/pawang/marriage-story/public:/usr/src/app/public --name marriage-story ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
+          docker run -d -p 5000:5000 --restart always -v /home/marriagestory/marriage-story/public:/usr/src/app/public --name marriage-story ${{ secrets.DOCKERHUB_USERNAME }}/marriage-story:latest
