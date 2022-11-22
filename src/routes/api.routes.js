@@ -1,41 +1,117 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const express = require("express");
+const userController = require("../controllers/user.controller");
+const eventController = require("../controllers/event.controller");
+const paymentDetailController = require("../controllers/payment-detail.controller");
+const scheduleController = require("../controllers/schedule.controller");
 
-async function main() {
-  const roles = [
-    {
-      role_name: "Wedding Organizer",
-    },
-    {
-      role_name: "Client",
-    },
-    {
-      role_name: "Admin",
-    },
-  ];
+const authMiddleware = require("../middlewares/auth.middleware");
+const woMiddleware = require("../middlewares/wo.middleware");
+const adminMiddleware = require("../middlewares/admin.middleware");
 
-  roles.forEach(async (role) => {
-    await prisma.roles.upsert({
-      create: {
-        role_name: role.role_name,
-      },
-      update: {
-        role_name: role.role_name,
-      },
-      where: {
-        role_name: role.role_name,
-      },
-    });
+const router = express.Router();
 
-    console.log(`Sucess Create Role ${role.role_name}`);
-  });
-}
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+// API INDEX
+router.get("/", (req, res) => {
+  res.send("Marriage Story API 2022");
+});
+
+// Authentification Routes
+router.post("/auth/register", userController.register);
+router.post("/auth/login", userController.login);
+
+// User Routes
+router.get("/users/profile", authMiddleware, userController.profile);
+router.post(
+  "/users/profile/update",
+  authMiddleware,
+  userController.updateProfile
+);
+router.get(
+  "/users/list",
+  authMiddleware,
+  adminMiddleware,
+  userController.listUser
+);
+
+// Event Routes
+router.get("/events", authMiddleware, eventController.index);
+router.get("/events/:eventId", authMiddleware, eventController.show);
+router.post(
+  "/events/create",
+  authMiddleware,
+  woMiddleware,
+  eventController.store
+);
+router.put(
+  "/events/update/:eventId",
+  authMiddleware,
+  woMiddleware,
+  eventController.update
+);
+router.delete(
+  "/events/delete/:eventId",
+  authMiddleware,
+  woMiddleware,
+  eventController.destroy
+);
+router.post("/events/join", authMiddleware, eventController.user_join);
+router.post("/events/leave", authMiddleware, eventController.user_leave);
+
+// Payment Detail Routes
+router.get(
+  "/events/:eventId/payments",
+  authMiddleware,
+  paymentDetailController.index
+);
+router.get(
+  "/events/:eventId/payments/:paymentId",
+  authMiddleware,
+  paymentDetailController.show
+);
+router.post(
+  "/events/:eventId/payments/create",
+  authMiddleware,
+  paymentDetailController.store
+);
+router.put(
+  "/events/:eventId/payments/update/:paymentId",
+  authMiddleware,
+  paymentDetailController.update
+);
+router.delete(
+  "/events/:eventId/payments/delete/:paymentId",
+  authMiddleware,
+  paymentDetailController.destroy
+);
+
+// Schedule Routes
+router.get(
+  "/events/:eventId/schedules",
+  authMiddleware,
+  scheduleController.index
+);
+router.get(
+  "/events/:eventId/schedules/:scheduleId",
+  authMiddleware,
+  scheduleController.show
+);
+router.post(
+  "/events/:eventId/schedules/create",
+  authMiddleware,
+  woMiddleware,
+  scheduleController.store
+);
+router.put(
+  "/events/:eventId/schedules/update/:scheduleId",
+  authMiddleware,
+  woMiddleware,
+  scheduleController.update
+);
+router.delete(
+  "/events/:eventId/schedules/delete/:scheduleId",
+  authMiddleware,
+  woMiddleware,
+  scheduleController.destroy
+);
+
+module.exports = router;

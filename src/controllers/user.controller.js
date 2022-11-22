@@ -168,7 +168,26 @@ module.exports = {
     } catch (error) {
       return res
         .status(error.status || 500)
-        .json({ status: false, message: error.message });
+        .json({ status: false, message: error.mesoksage });
+    }
+  },
+  listUser: async (req, res) => {
+    try {
+      const users = await prisma.users.findMany({});
+
+      users.forEach((user) => {
+        delete user.password;
+      });
+
+      res.status(200).json({
+        status: true,
+        message: "SUCCESS_GET_LIST_USER",
+        data: users,
+      });
+    } catch (error) {
+      return res
+        .status(error.status || 500)
+        .json({ status: false, message: error.mesoksage });
     }
   },
 };

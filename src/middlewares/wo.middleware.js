@@ -14,10 +14,10 @@ module.exports = async (req, res, next) => {
       },
     });
 
-    if (user.role.role_name != "Admin") {
+    if (user.role.role_name != "Wedding Organizer") {
       throw {
         status: 401,
-        message: "UNAUTHORIZED ROLE CAN BE ACCESS ONLY ADMIN",
+        message: "UNAUTHORIZED ROLE CAN BE ACCESS ONLY WEDDING ORGANIZER",
       };
     }
 

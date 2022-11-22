@@ -4,16 +4,27 @@ const prisma = new PrismaClient();
 async function main() {
   const roles = [
     {
+      role_name: "Wedding Organizer",
+    },
+    {
       role_name: "Client",
     },
     {
-      role_name: "Wedding Organizer",
+      role_name: "Admin",
     },
   ];
 
   roles.forEach(async (role) => {
-    await prisma.roles.create({
-      data: role,
+    await prisma.roles.upsert({
+      create: {
+        role_name: role.role_name,
+      },
+      update: {
+        role_name: role.role_name,
+      },
+      where: {
+        role_name: role.role_name,
+      },
     });
 
     console.log(`Sucess Create Role ${role.role_name}`);
