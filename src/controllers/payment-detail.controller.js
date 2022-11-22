@@ -38,6 +38,7 @@ module.exports = {
         data: paymentDetails,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(error.status || 500)
         .json({ status: false, message: error.message });
@@ -83,6 +84,7 @@ module.exports = {
         data: paymentDetail,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(error.status || 500)
         .json({ status: false, message: error.message });
@@ -172,6 +174,7 @@ module.exports = {
         }
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(error.status || 500)
         .json({ status: false, message: error.message });
@@ -228,6 +231,17 @@ module.exports = {
             throw { status: 404, message: "PAYMENT_DETAIL_NOT_FOUND" };
           }
 
+          //   Delete Total Payment Before Update
+          await prisma.events.update({
+            where: {
+              id: Number(eventId),
+            },
+            data: {
+              jumlah_terbayar:
+                Number(getTotalPayment) - Number(checkPaymentDetail.total),
+            },
+          });
+
           let paymentDetail = await prisma.payment_details.update({
             where: {
               id: Number(paymentId),
@@ -277,6 +291,7 @@ module.exports = {
         }
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(error.status || 500)
         .json({ status: false, message: error.message });
@@ -293,6 +308,9 @@ module.exports = {
             event_id: Number(eventId),
             user_id: Number(userId),
           },
+        },
+        include: {
+          events: {},
         },
       });
 
@@ -318,8 +336,7 @@ module.exports = {
         },
         data: {
           jumlah_terbayar:
-            Number(checkEvent.jumlah_terbayar) -
-            Number(checkPaymentDetail.total),
+            checkEvent.events.jumlah_terbayar - checkPaymentDetail.total,
         },
       });
 
@@ -339,6 +356,7 @@ module.exports = {
         data: paymentDetail,
       });
     } catch (error) {
+      console.log(error);
       return res
         .status(error.status || 500)
         .json({ status: false, message: error.message });
