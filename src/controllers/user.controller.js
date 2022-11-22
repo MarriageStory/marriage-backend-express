@@ -173,7 +173,11 @@ module.exports = {
   },
   listUser: async (req, res) => {
     try {
-      const users = await prisma.users.findMany({});
+      const users = await prisma.users.findMany({
+        include: {
+          role: {},
+        },
+      });
 
       users.forEach((user) => {
         delete user.password;
