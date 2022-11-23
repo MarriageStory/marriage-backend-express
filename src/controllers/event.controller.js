@@ -221,13 +221,6 @@ module.exports = {
         throw { status: 404, message: "EVENT_NOT_FOUND" };
       }
 
-      // Hapus Semua Paket
-      await prisma.paket.deleteMany({
-        where: {
-          event_id: Number(eventId),
-        },
-      });
-
       await prisma.events.delete({
         where: {
           id: Number(eventId),
