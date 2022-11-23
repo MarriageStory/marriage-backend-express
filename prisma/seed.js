@@ -4,10 +4,10 @@ const prisma = new PrismaClient();
 async function main() {
   const roles = [
     {
-      role_name: "Wedding Organizer",
+      role_name: "Client",
     },
     {
-      role_name: "Client",
+      role_name: "Wedding Organizer",
     },
     {
       role_name: "Admin",
