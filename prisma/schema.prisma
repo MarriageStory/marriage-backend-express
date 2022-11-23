@@ -1,94 +1,94 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model events {
-  id                Int                      @id @default(autoincrement())
-  nama_client       String                   @db.VarChar(255)
-  datetime          DateTime
-  tempat            String                   @db.VarChar(255)
-  total_pembayaran  Float                    @default(0)
-  status_pembayaran events_status_pembayaran @default(pending)
-  jumlah_terbayar   Float                    @default(0)
-  note              String                   @db.Text
-  gencode           String                   @db.VarChar(6)
-  created_at        DateTime                 @default(now())
-  updated_at        DateTime                 @updatedAt
-  paket             paket[]
-  payment_details   payment_details[]
-  schedules         schedules[]
-  users_events      users_events[]
+    id                Int                      @id @default(autoincrement())
+    nama_client       String                   @db.VarChar(255)
+    datetime          DateTime
+    tempat            String                   @db.VarChar(255)
+    total_pembayaran  Float                    @default(0)
+    status_pembayaran events_status_pembayaran @default(pending)
+    jumlah_terbayar   Float                    @default(0)
+    note              String                   @db.Text
+    gencode           String                   @db.VarChar(6)
+    created_at        DateTime                 @default(now())
+    updated_at        DateTime                 @updatedAt
+    paket             paket[]
+    payment_details   payment_details[]
+    schedules         schedules[]
+    users_events      users_events[]
 }
 
 model paket {
-  id         Int      @id @default(autoincrement())
-  event_id   Int
-  deskripsi  String   @db.VarChar(255)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  event      events   @relation(fields: [event_id], references: [id])
+    id         Int      @id @default(autoincrement())
+    event_id   Int
+    deskripsi  String   @db.VarChar(255)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    event      events   @relation(fields: [event_id], references: [id], onDelete: Cascade)
 }
 
 model payment_details {
-  id           Int      @id @default(autoincrement())
-  nama_payment String   @db.VarChar(255)
-  total        Float    @default(0)
-  datetime     DateTime
-  detail       String   @db.Text
-  image        String?  @db.VarChar(255)
-  event_id     Int
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  event        events   @relation(fields: [event_id], references: [id])
+    id           Int      @id @default(autoincrement())
+    nama_payment String   @db.VarChar(255)
+    total        Float    @default(0)
+    datetime     DateTime
+    detail       String   @db.Text
+    image        String?  @db.VarChar(255)
+    event_id     Int
+    created_at   DateTime @default(now())
+    updated_at   DateTime @updatedAt
+    event        events   @relation(fields: [event_id], references: [id], onDelete: Cascade)
 }
 
 model roles {
-  id         Int      @id @default(autoincrement())
-  role_name  String   @unique @db.VarChar(255)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  users      users[]
+    id         Int      @id @default(autoincrement())
+    role_name  String   @unique @db.VarChar(255)
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    users      users[]
 }
 
 model schedules {
-  id              Int      @id @default(autoincrement())
-  nama_kegiatan   String   @db.VarChar(255)
-  detail_kegiatan String   @db.Text
-  datetime        DateTime
-  tempat          String   @db.VarChar(255)
-  event_id        Int
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-  event           events   @relation(fields: [event_id], references: [id])
+    id              Int      @id @default(autoincrement())
+    nama_kegiatan   String   @db.VarChar(255)
+    detail_kegiatan String   @db.Text
+    datetime        DateTime
+    tempat          String   @db.VarChar(255)
+    event_id        Int
+    created_at      DateTime @default(now())
+    updated_at      DateTime @updatedAt
+    event           events   @relation(fields: [event_id], references: [id], onDelete: Cascade)
 }
 
 model users {
-  id           Int            @id @default(autoincrement())
-  fullname     String         @db.VarChar(255)
-  email        String         @unique @db.VarChar(255)
-  password     String         @db.VarChar(255)
-  role_id      Int
-  created_at   DateTime       @default(now())
-  updated_at   DateTime       @updatedAt
-  role         roles          @relation(fields: [role_id], references: [id])
-  users_events users_events[]
+    id           Int            @id @default(autoincrement())
+    fullname     String         @db.VarChar(255)
+    email        String         @unique @db.VarChar(255)
+    password     String         @db.VarChar(255)
+    role_id      Int
+    created_at   DateTime       @default(now())
+    updated_at   DateTime       @updatedAt
+    role         roles          @relation(fields: [role_id], references: [id])
+    users_events users_events[]
 }
 
 model users_events {
-  user_id  Int    @unique
-  event_id Int
-  events   events @relation(fields: [event_id], references: [id])
-  users    users  @relation(fields: [user_id], references: [id])
+    user_id  Int    @unique
+    event_id Int
+    events   events @relation(fields: [event_id], references: [id])
+    users    users  @relation(fields: [user_id], references: [id])
 
-  @@id([user_id, event_id])
+    @@id([user_id, event_id])
 }
 
 enum events_status_pembayaran {
-  done
-  pending
+    done
+    pending
 }
