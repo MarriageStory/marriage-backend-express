@@ -82,8 +82,8 @@ model users {
 model users_events {
     user_id  Int    @unique
     event_id Int
-    events   events @relation(fields: [event_id], references: [id])
-    users    users  @relation(fields: [user_id], references: [id])
+    events   events @relation(fields: [event_id], references: [id], onDelete: Cascade)
+    users    users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
     @@id([user_id, event_id])
 }
